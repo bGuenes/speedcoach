@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-import SpeedCoach
+#import SpeedCoach
 
 app = Flask(__name__)
 
