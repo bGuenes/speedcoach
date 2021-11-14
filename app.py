@@ -1,13 +1,22 @@
-from flask import Flask
+from flask import Flask, render_template, request
+import SpeedCoach
 
 app = Flask(__name__)
 
-@app.route("/berkay")
-def test():
-    return "<b>test</b>"
+
 @app.route('/')
-def hello():
-    return 'Hello, World!'
+def homepage():
+    return render_template("home.html")
+
+@app.route("/uploader", methods = ['GET', 'POST'])
+def upload():
+    if request.method == "POST":
+        f = request.files['file']
+        mydata = f.read()
+        pl0t = makeprettxpltd(mydata)
+        return f.read()
 
 if __name__ == "__main__":
     app.run()
+
+##test
