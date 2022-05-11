@@ -2,3 +2,4 @@ matplotlib==3.4.1
 flask
 gunicorn
 Werkzeug==1.0.1
+MarkupSafe==2.0.1
