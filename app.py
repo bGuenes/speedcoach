@@ -25,7 +25,7 @@ def upload():
         pdfpath, file = SpeedCoach(mydata, workout)
 
         workingdir = os.path.abspath(os.getcwd())
-        pdfpath = workingdir+"\\"+"data"+"\\"+workout+"\\"
+        pdfpath = workingdir+"/"+"data"+"/"+workout+"/"
         print(pdfpath)
 
         #return send_from_directory(pdfpath, file), os.remove(pdfpath+file)
