@@ -7,10 +7,11 @@
 <body>
 <b>Speedcoach-Analysis</b><p><p>
 
-<form action="uploader" method = "POST" enctype="multipart/form-data">
+<form action="{{url_for('homepage')}}" method = "POST" enctype="multipart/form-data">
 	Select your CSV-file here: <input type="file" name="file"/><p>
 	Name of the workout: <input type="text" name="workout"/><p>
 	<input type="submit"/>
 </form>
+</body>
 </body>
 </html>
