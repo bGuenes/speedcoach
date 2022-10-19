@@ -30,6 +30,12 @@ def homepage():
 @app.route("/<var>")
 def upload(var):
 
+    if request.method == "POST":
+
+        f = request.files['file']
+        data.x = np.char.split(np.asarray(f.read().decode("utf-8").split("\n")), ",")
+
+
     mydata = data.x
 
     workout = var
