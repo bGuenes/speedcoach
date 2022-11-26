@@ -50,9 +50,6 @@ def get_time(s):
 
 def SpeedCoach(readCSV, workout):
 
-
-    summary = readCSV[15]
-
     values = readCSV
     for i in range(0, 30):
         values = np.delete(values, 0)
