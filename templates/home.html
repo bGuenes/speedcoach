@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Speedcoach-Analysis</title>
 </head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <body>
-<b>Noice</b>
-<form action="uploader" method = "POST" enctype="multipart/form-data">
-	<input type="file" name="file"/>
-	<input type="text" name="workout"/>
+<b>Speedcoach-Analysis</b><p><p>
+
+<form action="{{url_for('homepage')}}" method = "POST" enctype="multipart/form-data">
+	Select your CSV-file here: <input type="file" name="file"/><p>
+	Name of the workout: <input type="text" name="workout"/><p>
 	<input type="submit"/>
 </form>
+</body>
 </body>
 </html>
