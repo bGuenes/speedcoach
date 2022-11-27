@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import os
 from PyPDF2 import PdfFileMerger
 import statistics
+from scipy.interpolate import make_interp_spline
 
 # -Funktionen----------------------------------------------------------------------------------------------------------#
 
@@ -140,13 +141,38 @@ def SpeedCoach(readCSV, workout):
         if minsplit < split_sec[k]:
             minsplit = split_sec[k]
 
-    # Herzfrequenz
-    if correct_HR_values == True:
-        HRmean = round(statistics.mean(HeartRate),1)
-        HRmax = max(HeartRate)
-        # print('Mean heart rate = %s spm\nMax. heart rate = %s spm' % (HRmean, HRmax))
-    # else:
-        # print("Heart rate values are not correct!")
+    # -Smooth line---------------------------------------------------------------------------------------------------------#
+   
+    new_dis = []
+    new_split = []
+    new_SR = []
+
+    smoothness = 3 # wähle aus wie viele Nachbarn zusammengefasst werden sollen, muss ungerade sein
+
+    # rechnet die umliegenden Nachbarn zusammen
+    for i in range(1, len(distance)):
+        if i % smoothness == 0:
+            lower_upper = int((smoothness - 1) / 2)
+            dis = []
+            sp = []
+            SR = []
+            for j in range(-lower_upper, lower_upper):
+                dis.append(distance[i + j])
+                sp.append(split_sec[i + j])
+                SR.append(StrokeRate[i + j])
+
+            new_dis.append(np.mean(dis))
+            new_split.append(np.mean(sp))
+            new_SR.append(np.mean(SR))
+
+    # mehr punkte -> mehr smooth ;)
+    distance_new = np.linspace(0, max(new_dis), 1000)
+
+    spl_split = make_interp_spline(new_dis, new_split)
+    split_smooth = spl_split(distance_new)
+
+    spl_SR = make_interp_spline(new_dis, new_SR)
+    SR_smooth = spl_SR(distance_new)
 
     # -Diagramme-----------------------------------------------------------------------------------------------------------#
 
@@ -161,10 +187,11 @@ def SpeedCoach(readCSV, workout):
 
 
     # split
-    plt.plot(distance, split_sec, color='navy', label='Split', lw=0.8)
-    plt.yticks([80,82,84,86,88,90,92,94,96,98,100,105,110,115,120,130,140,150,160,170,180,190,200],
-               ['1:20.0','1:22.0','1:24.0','1:26.0','1:28.0','1:30.0','1:32.0','1:34.0','1:36.0','1:38.0','1:40.0','1:45.0',
-                '1:50.0','1:55.0','2:00.0','2:10.0','2:20.0','2:30.0','2:40.0','2:50.0','3:00.0','3:10.0','3:20.0'])
+    plt.plot(distance_new, split_smooth, color='navy', label='Split', lw=0.8)
+    plt.yticks([80,85,90,95,100,105,110,115,120,130,140,150,160,170,180,190,200],
+               ['1:20.0','1:25.0','1:30.0','1:35.0','1:40.0','1:45.0',
+                '1:50.0','1:55.0','2:00.0','2:10.0','2:20.0','2:30.0',
+                '2:40.0','2:50.0','3:00.0','3:10.0','3:20.0'])
     plt.grid(color='grey', ls=':')
     plt.axhline(y=splitmean_sec, xmin=0.05, xmax=0.95, color='red', ls='--', lw=0.5,
                 label='Avg. split (%s min/500m)' % (splitmean))
@@ -181,7 +208,7 @@ def SpeedCoach(readCSV, workout):
     plt.gcf().clear()
 
     # Stroke Rate
-    plt.plot(distance, StrokeRate, color='navy', label='Stroke Rate', lw=0.8)
+    plt.plot(distance_new, SR_smooth, color='navy', label='Stroke Rate', lw=0.8)
     plt.grid(color='grey', ls=':')
     plt.ylim(MaxStrokeRate+2, np.min(StrokeRate)-2)
     plt.xlim(0, distance[len(distance)-1]+10)
@@ -199,6 +226,9 @@ def SpeedCoach(readCSV, workout):
 
     # Heart Rate
     if correct_HR_values == True:
+        HRmean = round(statistics.mean(HeartRate),1)
+        HRmax = max(HeartRate)
+
         plt.plot(distance, HeartRate, color='navy', label='Heart Rate', lw=0.8)
         plt.grid(color='grey', ls=':')
         plt.ylim(HRmax+2, np.min(HeartRate)-2)
