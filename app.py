@@ -4,6 +4,29 @@ import numpy as np
 import os
 import io
 
+class ReverseProxied(object):
+
+    def __init__(self, app, script_name=None, scheme=None, server=None):
+        self.app = app
+        self.script_name = script_name
+        self.scheme = scheme
+        self.server = server
+
+    def __call__(self, environ, start_response):
+        script_name = environ.get('HTTP_X_SCRIPT_NAME', '') or self.script_name
+        if script_name:
+            environ['SCRIPT_NAME'] = script_name
+            path_info = environ['PATH_INFO']
+            if path_info.startswith(script_name):
+                environ['PATH_INFO'] = path_info[len(script_name):]
+        scheme = environ.get('HTTP_X_SCHEME', '') or self.scheme
+        if scheme:
+            environ['wsgi.url_scheme'] = scheme
+        server = environ.get('HTTP_X_FORWARDED_SERVER', '') or self.server
+        if server:
+            environ['HTTP_HOST'] = server
+        return self.app(environ, start_response)
+
 class DataBase(object):
     x = None
 
@@ -11,6 +34,7 @@ class DataBase(object):
 data = DataBase()
 
 app = Flask(__name__)
+app.wsgi_app = ReverseProxied(app.wsgi_app, script_name='/speedcoach')
 
 key = os.urandom(16)
 app.config.update(SECRET_KEY=key)
@@ -55,7 +79,7 @@ def upload(var):
     os.remove(file_path)
     os.rmdir(pdfpath)
 
-    return send_file(return_data, mimetype='application/pdf', attachment_filename=workout+".pdf")
+    return send_file(return_data, mimetype='application/pdf', download_name=workout+".pdf")
 
 @app.route("/backdoor", methods=["POST"])
 def compute():
