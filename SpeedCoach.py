@@ -188,10 +188,9 @@ def SpeedCoach(readCSV, workout):
 
     # split
     plt.plot(distance_new, split_smooth, color='navy', label='Split', lw=0.8)
-    plt.yticks([80,85,90,95,100,105,110,115,120,130,140,150,160,170,180,190,200],
+    plt.yticks([80,85,90,95,100,105,110,115,120,125,130],
                ['1:20.0','1:25.0','1:30.0','1:35.0','1:40.0','1:45.0',
-                '1:50.0','1:55.0','2:00.0','2:10.0','2:20.0','2:30.0',
-                '2:40.0','2:50.0','3:00.0','3:10.0','3:20.0'])
+                '1:50.0','1:55.0','2:00.0', '2:05.0','2:10.0'])
     plt.grid(color='grey', ls=':')
     plt.axhline(y=splitmean_sec, xmin=0.05, xmax=0.95, color='red', ls='--', lw=0.5,
                 label='Avg. split (%s min/500m)' % (splitmean))
