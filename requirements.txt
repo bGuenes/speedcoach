@@ -3,3 +3,4 @@ flask
 gunicorn
 Werkzeug
 PyPDF2
+scipy
