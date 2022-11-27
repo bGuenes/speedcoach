@@ -18,9 +18,14 @@ app.config.update(SECRET_KEY=key)
 @app.route('/', methods = ["GET", "POST"])
 def homepage():
     if request.method == "POST":
+        
+        if request.form["workout"] == "":
+            varW = request.files["file"].filename
+            varW = varW.rsplit(".")[0]
+        else:
+            varW = request.form["workout"]
 
-        varW = request.form["workout"]
-        f = request.files['file']
+        f = request.files["file"]
         data.x = np.char.split(np.asarray(f.read().decode("utf-8").split("\n")), ",")
 
         return redirect(url_for("upload", var=varW))
