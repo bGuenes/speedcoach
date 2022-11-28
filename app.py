@@ -87,7 +87,12 @@ def compute():
     data.x = np.char.split(np.asarray(f.read().decode("utf-8").split("\n")), ",")
 
     mydata = data.x
-    workout = request.json["workout"]
+    
+    if request.form["workout"] == "":
+        workout = request.files["file"].filename
+        workout = workout.rsplit(".")[0]
+    else:
+        workout = request.form["workout"]
 
     pdfpath, file = SpeedCoach(mydata, workout)
 
@@ -105,7 +110,7 @@ def compute():
     os.remove(file_path)
     os.rmdir(pdfpath)
 
-    return send_file(return_data, mimetype='application/pdf', attachment_filename=workout+".pdf")
+    return send_file(return_data, mimetype='application/pdf', download_name=workout+".pdf")
 
 if __name__ == "__main__":
     app.run()
