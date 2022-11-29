@@ -145,7 +145,7 @@ def SpeedCoach(readCSV, workout):
 
     # -Smooth line---------------------------------------------------------------------------------------------------------#
 
-    smoothness = 3 # wähle aus wie viele Zahlen in einem moving window sind, muss ungerade sein
+    smoothness = 5 # wähle aus wie viele Zahlen in einem moving window sind, muss ungerade sein
 
     edge_cut = m.floor(smoothness/2)
     new_dis = distance[edge_cut:-edge_cut]
