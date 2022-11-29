@@ -145,7 +145,7 @@ def SpeedCoach(readCSV, workout):
 
     # -Smooth line---------------------------------------------------------------------------------------------------------#
 
-    smoothness = 5 # wähle aus wie viele Zahlen in einem moving window sind, muss ungerade sein
+    smoothness = 3 # wähle aus wie viele Zahlen in einem moving window sind, muss ungerade sein
 
     edge_cut = m.floor(smoothness/2)
     new_dis = distance[edge_cut:-edge_cut]
@@ -162,68 +162,6 @@ def SpeedCoach(readCSV, workout):
     if correct_HR_values == True:
         spl_HR = make_interp_spline(distance, HeartRate)
         HR_smooth = spl_HR(distance_new)
-
-    '''
-    new_dis = []
-    new_split = []
-    new_SR = []
-
-    i = 0
-    while i < (len(distance) - smoothness + 1):
-
-        window_dis   = distance[i : i + smoothness]
-        window_split = split_sec[i : i + smoothness]
-        window_SR    = StrokeRate[i : i + smoothness]
-        
-        # Calculate the average of current window
-        window_dis_average   = round(sum(window_dis) / smoothness, 2)
-        window_split_average = round(sum(window_split) / smoothness, 2)
-        window_SR_average    = round(sum(window_SR) / smoothness, 2)
-        
-        # Store the average of current
-        # window in moving average list
-        new_dis.append(window_dis_average)
-        new_split.append(window_split_average)
-        new_SR.append(window_SR_average)
-
-        # Shift window to right by one position
-        i += 1
-
-    distance_new = np.linspace(0, max(new_dis), 1000)
-
-    spl_split = make_interp_spline(new_dis, new_split)
-    split_smooth = spl_split(distance_new)
-
-    spl_SR = make_interp_spline(new_dis, new_SR)
-    SR_smooth = spl_SR(distance_new)
-    '''
-
-    '''
-    # rechnet die umliegenden Nachbarn zusammen
-    for i in range(1, len(distance)):
-        if i % smoothness == 0:
-            lower_upper = int((smoothness - 1) / 2)
-            dis = []
-            sp = []
-            SR = []
-            for j in range(-lower_upper, lower_upper):
-                dis.append(distance[i + j])
-                sp.append(split_sec[i + j])
-                SR.append(StrokeRate[i + j])
-
-            new_dis.append(np.mean(dis))
-            new_split.append(np.mean(sp))
-            new_SR.append(np.mean(SR))
-
-    # mehr punkte -> mehr smooth ;)
-    distance_new = np.linspace(0, max(new_dis), 1000)
-
-    spl_split = make_interp_spline(new_dis, new_split)
-    split_smooth = spl_split(distance_new)
-
-    spl_SR = make_interp_spline(new_dis, new_SR)
-    SR_smooth = spl_SR(distance_new)
-    '''
 
     # -Diagramme-----------------------------------------------------------------------------------------------------------#
 
