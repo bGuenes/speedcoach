@@ -4,7 +4,7 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfMerger
 import statistics
 from scipy.interpolate import make_interp_spline
 from scipy import signal
@@ -251,7 +251,7 @@ def SpeedCoach(readCSV, workout):
     else:
         pdf_files = ['Split.pdf', 'StrokeRate.pdf', 'DPS.pdf']
 
-    merger = PdfFileMerger()
+    merger = PdfMerger()
     for files in pdf_files:
         merger.append(path+files)
     merger.write(path+workout+'.pdf')
